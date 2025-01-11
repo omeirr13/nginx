@@ -1,27 +1,48 @@
-# Serving static html
+# Mimetypes
+- lets say we are sick of our plain old website, and we crave some styles.
+- if we make a styles.css file, and go back and see styles wont be applied, why is that? are they not being served?
 
-- make a new directory mysite having file index.html
+- if we go to network tab, styles.css is actually served to the webpage, why do we not see it?
 
-- we somehow have to configure nginx to serve this index.html file, whenever we go to localhost:8080
-- because we are dealing with http responses we need
-1) http context
-2) event context(which we wont use, just need to define for nginx configuration to work)
+### Reason:
+- if we click on styles.css request, its Content-Type is text/plain, whereas it should text/css
 
-
-- inside http define another context server, and inside server we will have a bunch of directives that will configure nginx server.
-- listen 8080
-- root (this directive will be a file path that will contain a bunch of different files that we want to serve, when we go to this port right over here)
-thats pretty much all we have to do to serve static html
+### Solution:
+- inside http context, we can define all of the types
+- anything that is text/css will have css extension
+- anything that is text/html will have html extension
 ```
 http{
+    types {
+        text/css        css;
+        text/html       html;
+    }
     server {
         listen 8080;
         root C:\Users\user\Desktop\Self\mysite;
     }
 }
+
+events {
+    
+}
 ```
 
-- now after this we will see our changes are not reflecting, that is because we have to reload nginx, have to go to nginx directory and run this command:
+- there are so many different files outthere, we would have to catch all files manually and add them in types here, luckily we dont have to do here, because nginx comes with default mimetypes in mime.types
+- we can copy paste, but better is including it.
+
 ```
-nginx -s reload 
+http{
+    types {
+       include mime.types
+    }
+    server {
+        listen 8080;
+        root C:\Users\user\Desktop\Self\mysite;
+    }
+}
+
+events {
+    
+}
 ```
