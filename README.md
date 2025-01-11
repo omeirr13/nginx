@@ -37,3 +37,30 @@ Nginx → Backend Server (HTTP): After decrypting the request, Nginx forwards th
 Backend Server → Nginx (HTTP): The backend server responds to Nginx in an unencrypted format.
 
 Nginx → Client (HTTPS): Nginx encrypts the response data again using HTTPS and sends it to the client.
+
+
+# NGINX Terminology:
+- in nginx.conf we will see there are two distinct things that exist in it.
+1) Some thing like key value pair
+```
+worker_processes 1
+include mime.types
+```
+- we have a bunch of those things
+
+2) event block(within it we have key value pair)
+
+### Directives
+- these key value pairs are known as directives
+
+
+### Context
+- blocks of code with curly braces
+- within context we can have directives for specific context
+
+
+# Working with nginx
+### Starting nginx:
+```nginx```
+- and now if we go to browser, we see welcome page of nginx
+- if we go to network, we can see request and server is nginx
