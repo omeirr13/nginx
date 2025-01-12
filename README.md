@@ -1,48 +1,61 @@
-# Mimetypes
-- lets say we are sick of our plain old website, and we crave some styles.
-- if we make a styles.css file, and go back and see styles wont be applied, why is that? are they not being served?
+# Location Context
+- Allows us to specify certain endpoints, certain pages we can hit
+- then we can serve different types of html elements
 
-- if we go to network tab, styles.css is actually served to the webpage, why do we not see it?
+- when we hit /fruits directory, we want to serve fruits/index.html file
+- we can do that with location context, this will be inside server
 
-### Reason:
-- if we click on styles.css request, its Content-Type is text/plain, whereas it should text/css
-
-### Solution:
-- inside http context, we can define all of the types
-- anything that is text/css will have css extension
-- anything that is text/html will have html extension
+- it will append /fruits automatically to ```root C:\Users\user\Desktop\Self\mysite;```
 ```
 http{
-    types {
-        text/css        css;
-        text/html       html;
-    }
+    include mime.types;
     server {
         listen 8080;
         root C:\Users\user\Desktop\Self\mysite;
+
+        location /fruits{
+            root C:\Users\user\Desktop\Self\mysite;
+        }
     }
 }
 
 events {
-    
+
 }
 ```
 
-- there are so many different files outthere, we would have to catch all files manually and add them in types here, luckily we dont have to do here, because nginx comes with default mimetypes in mime.types
-- we can copy paste, but better is including it.
+- lets say we want to go to /carbs, and we want same fruits
+```
+location /carbs {
+    root C:\Users\user\Desktop\Self\mysite;
+}
+```
+- this will present an issue, because it will append \carbs and not \fruits
+- instead we have to specify we dont want to append it to end of root, and we want it to be \fruits
+- we would use alias here, it will not append
 
 ```
-http{
-    types {
-       include mime.types
-    }
-    server {
-        listen 8080;
-        root C:\Users\user\Desktop\Self\mysite;
-    }
+location /carbs {
+    alias C:\Users\user\Desktop\Self\mysite\fruits
 }
+```
 
-events {
-    
+
+### try_files
+- what if we want to show some other files, by default it will show index.html
+- i want to show veges.html
+- by default it will look for index.html, however when we specify try_files we can specify bunch of different directories we want tot ry.
+```
+location /vegetables {
+    root C:\Users\user\Desktop\Self\mysite;
+    try_files /vegetables/veges.html /index.html =404;
+}
+```
+
+### Regex
+```
+location ~* /count/[0-9] {
+    root C:\Users\user\Desktop\Self\mysite;
+    try_files /index.html =404;
 }
 ```
